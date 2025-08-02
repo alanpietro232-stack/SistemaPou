@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema Pousada Bicharada - Cadastro de Pet</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #333; }
+    form, table { margin-top: 20px; width: 100%; max-width: 700px; }
+    input, select, textarea { width: 100%; padding: 8px; margin: 6px 0; }
+    table { border-collapse: collapse; margin-top: 30px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #eee; }
+    button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Cadastro de Tutor e Pet - Pousada Bicharada</h1>
+
+  <form id="cadastroForm">
+    <label>Nome do Tutor:</label>
+    <input type="text" id="tutor" required>
+
+    <label>Nome do Pet:</label>
+    <input type="text" id="pet" required>
+
+    <label>Porte:</label>
+    <select id="porte" required>
+      <option value="">Selecione</option>
+      <option value="P">Pequeno</option>
+      <option value="M">Médio</option>
+      <option value="G">Grande</option>
+    </select>
+
+    <label>Espécie:</label>
+    <select id="especie" required>
+      <option value="Cão">Cão</option>
+      <option value="Gato">Gato</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <label>É castrado?</label>
+    <select id="castrado">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Tipo de alimentação:</label>
+    <select id="alimentacao">
+      <option value="Ração">Ração</option>
+      <option value="Comida Natural">Comida Natural</option>
+    </select>
+
+    <label>Toma medicação? Qual?</label>
+    <input type="text" id="medicacao">
+
+    <label>Pode comer fruta?</label>
+    <select id="fruta">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Pode petisco?</label>
+    <select id="petisco">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Horário de alimentação:</label>
+    <input type="text" id="horario">
+
+    <label>Vacinas e vermífugo em dia?</label>
+    <select id="vacinas">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <label>Usa antipulgas/carrapato?</label>
+    <select id="pulgas">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+
+    <button type="submit">Salvar Cadastro</button>
+  </form>
+
+  <table id="cadastroTabela">
+    <thead>
+      <tr>
+        <th>Tutor</th><th>Pet</th><th>Porte</th><th>Espécie</th><th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('cadastroForm');
+    const tabela = document.getElementById('cadastroTabela').querySelector('tbody');
+
+    function carregarCadastros() {
+      const cadastros = JSON.parse(localStorage.getItem('cadastros') || '[]');
+      tabela.innerHTML = '';
+      cadastros.forEach((c, i) => {
+        const row = `<tr>
+          <td>${c.tutor}</td><td>${c.pet}</td><td>${c.porte}</td><td>${c.especie}</td>
+          <td><button onclick="excluirCadastro(${i})">Excluir</button></td>
+        </tr>`;
+        tabela.innerHTML += row;
+      });
+    }
+
+    function excluirCadastro(index) {
+      const cadastros = JSON.parse(localStorage.getItem('cadastros') || '[]');
+      cadastros.splice(index, 1);
+      localStorage.setItem('cadastros', JSON.stringify(cadastros));
+      carregarCadastros();
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cadastro = {
+        tutor: document.getElementById('tutor').value,
+        pet: document.getElementById('pet').value,
+        porte: document.getElementById('porte').value,
+        especie: document.getElementById('especie').value,
+        castrado: document.getElementById('castrado').value,
+        alimentacao: document.getElementById('alimentacao').value,
+        medicacao: document.getElementById('medicacao').value,
+        fruta: document.getElementById('fruta').value,
+        petisco: document.getElementById('petisco').value,
+        horario: document.getElementById('horario').value,
+        vacinas: document.getElementById('vacinas').value,
+        pulgas: document.getElementById('pulgas').value
+      };
+      const cadastros = JSON.parse(localStorage.getItem('cadastros') || '[]');
+      cadastros.push(cadastro);
+      localStorage.setItem('cadastros', JSON.stringify(cadastros));
+      form.reset();
+      carregarCadastros();
+    });
+
+    carregarCadastros();
+  </script>
+</body>
+</html>
